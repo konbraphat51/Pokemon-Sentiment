@@ -19,3 +19,6 @@
 ミミッキュ：https://github.com/konbraphat51/Sentiment-Analysis-mimikkyu  
 ピカチュウ：https://github.com/konbraphat51/Sentiment-Analysis-Pikachu  
 （失敗例）東大生：https://github.com/konbraphat51/Sentiment-Analysis-UT-sei  
+  
+## requestsでエラーが出る場合は
+Selenium版です：https://github.com/konbraphat51/Sentiment-Analyzer/tree/8dc5236eb47e442fbee1592d72ce0e4660126c4a
