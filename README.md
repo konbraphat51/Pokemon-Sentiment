@@ -12,7 +12,10 @@
 * キーワードの極性の変遷を表示（12）
   
 ## 使い方
-各ノートの「必要なもの」の指示にしたがった後に実行してください
+各ノートの「必要なもの」の指示にしたがった後に実行してください。  
+極性ラベリングをする際は「pos」「neg」「neu」の三択、あるいは「pos」「neg」「neu」「resb」（レスバ）の４択で行ってください。
   
 ## 分析例
-ミミッキュ：https://github.com/konbraphat51/Sentiment-Analysis-mimikkyu
+ミミッキュ：https://github.com/konbraphat51/Sentiment-Analysis-mimikkyu  
+ピカチュウ：https://github.com/konbraphat51/Sentiment-Analysis-Pikachu  
+（失敗例）東大生：https://github.com/konbraphat51/Sentiment-Analysis-UT-sei  
