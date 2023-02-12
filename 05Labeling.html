@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id = "define">
+        対象ファイル
+        <input type="file" id = "target_file">
+
+        <br>
+
+        開始インデックス（１スタート）
+        <input type="number" id = "start_index" value = "1" min="1">
+        <br>
+        <br>
+
+        ラベル種類数
+        <input type="number" id="label_types">
+        <button onclick="register_label_n()">種類数決定</button>
+        <br>
+
+        <br>
+        <br>
+
+        <div id = "labels">
+            <div class = "label_name_div" id = "label_name_div_1">
+                ラベル名
+                <input type = "text" class="label_name">
+            </div>
+        </div>      
+        
+        <br>
+        <br>
+
+        <button onclick="start_labeling()">ラベリングへ</button>
+    </div>
+    <div id = "labeling" style="display: none;">
+        <div id = "text_index">
+
+        </div>
+        <div id = "text">
+
+        </div>
+        <div id = "label_buttons">
+
+        </div>
+        <button id="save_button" onclick="save_file()">ファイル保存</button>
+    </div>
+</body>
+</html>
+
+<script>
+    //テキストファイル
+    var target_texts
+    var output_texts = ""
+    var reading_index
+
+    //ラベル数を登録
+    function register_label_n(){
+        //リセット
+        let label_name_divs = document.getElementsByClassName("label_name_div")
+        let label_name_divs_n = label_name_divs.length
+        for (let cnt = 0; cnt < label_name_divs_n-1; cnt++){
+            label_name_divs[1].remove()
+        }
+
+        //要素数を取得
+        let label_types_input = document.getElementById("label_types")
+        let types_n = label_types_input.value
+
+        //追加
+        if (types_n > 1){
+            let label_div_1 = document.getElementById("label_name_div_1")
+
+            for (let cnt = 0; cnt < types_n-1; cnt++){
+                let label_name_div = label_div_1.cloneNode(true)
+                label_name_div.id = ""
+                label_div_1.after(label_name_div)
+            }
+        }
+    }
+
+    //ラベリングモード開始
+    function start_labeling(){
+        //ラベル決めモード終了
+        let define_div = document.getElementById("define")
+        define_div.style.display = "none"
+
+        //ラベリングエリア表示
+        let labeling_div = document.getElementById("labeling")
+        labeling_div.style.display="block"
+
+        //開始インデックスを取得
+        let start_index_input = document.getElementById("start_index")
+        reading_index = start_index_input.value -1
+
+        //ラベル名を取得
+        let label_names_input = document.getElementsByClassName("label_name")
+        let label_names = []
+        for (let cnt = 0; cnt < label_names_input.length; cnt++){
+            label_names.push(label_names_input[cnt].value)
+        }
+
+        //ラベルボタンを用意
+        let label_button = document.createElement("button")
+        label_button.className = "label_button"
+        let label_button_div = document.getElementById("label_buttons")
+        for (let cnt = 0; cnt < label_names.length; cnt++){
+            let this_label_button = label_button.cloneNode(true)
+            this_label_button.innerHTML = label_names[cnt]
+            this_label_button.value = label_names[cnt]
+            this_label_button.onclick = set_label
+
+            label_button_div.appendChild(this_label_button)
+        }
+
+        //テキストファイル読み込み
+        target_file = document.getElementById("target_file").files[0]
+        var reader = new FileReader()
+        reader.readAsText(target_file)
+        //読み込み完了時の処理
+        reader.onload = function(ev){
+            target_texts = reader.result.split("\n")
+            get_line()
+        }
+    }
+
+    function get_line(){
+        //テキストを更新
+        let text_div = document.getElementById("text")
+        text_div.textContent = target_texts[reading_index]
+        
+        //番号を表示
+        let index_div = document.getElementById("text_index")
+        index_div.textContent = reading_index + 1       
+
+        //次の行を読む
+        reading_index++
+    }
+
+    //ラベル設定
+    function set_label(event){
+        //対象のテキスト
+        let text = document.getElementById("text").textContent
+        //改行文字を全て置換
+        text = text.split("\n")
+        text = text.join("")
+        text = text.split("\r\n")
+        text = text.join("")
+        text = text.split("\r")
+        text = text.join("")
+
+        //選択されたラベル
+        let label = event.target.value
+
+        //書き込む行
+        let output_line = text+"\t"+label+"\n"
+
+        //記入
+        output_texts += output_line
+
+        //次の行へ
+        get_line()
+    }
+
+    //ファイル保存
+    function save_file(){
+        //Blobを作る
+        let blob = new Blob(output_texts.split(""), {type:"text/plan"}); // テキスト
+        
+        //仮想的なリンクを作成
+        let link = document.createElement('a'); 
+        link.href = URL.createObjectURL(blob); 
+        link.download = 'output.txt'; //リンクをクリックしたら、ファイルをダウンロード
+        
+        //仮想的なリンクを仮想的にクリックして、ダウンロードする
+        link.click();
+    }
+</script>
+
+<style>
+    #label_buttons button:nth-child(odd){
+        width: 100px;
+        height: 100px;
+        background-color: pink;
+    }
+
+    #label_buttons button:nth-child(even){
+        width: 100px;
+        height: 100px;
+        background-color: lightblue;
+    }
+</style>

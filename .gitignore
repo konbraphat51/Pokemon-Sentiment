@@ -1,0 +1,3 @@
+*.txt
+!Sentiment-Teacher/population.txt
+*.tsv
